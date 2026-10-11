@@ -1,6 +1,6 @@
 import type { Scramble } from '../scramble/scramble';
-import { serializeState, type CubeState } from '../state/cube';
-import type { SolveOptions, SolveResult } from './index';
+import { deserializeState, serializeState, type CubeState } from '../state/cube';
+import { generateRandomStateScramble, prepareSolver, solveState, type SolveOptions, type SolveResult } from './index';
 import type { SolverRequest, SolverResponse } from './protocol';
 
 type DistributiveOmit<T, K extends keyof never> = T extends unknown ? Omit<T, K> : never;
@@ -62,16 +62,14 @@ class SolverClient {
   private async runInline<T>(req: DistributiveOmit<SolverRequest, 'id'>): Promise<T> {
     // Cede a vez ao navegador antes do cálculo pesado.
     await new Promise((r) => setTimeout(r, 16));
-    const solver = await import('./index');
-    const { deserializeState } = await import('../state/cube');
     switch (req.type) {
       case 'prepare':
-        solver.prepareSolver(req.size);
+        prepareSolver(req.size);
         return null as T;
       case 'solve':
-        return solver.solveState(deserializeState(req.state), req.options) as T;
+        return solveState(deserializeState(req.state), req.options) as T;
       case 'randomState':
-        return solver.generateRandomStateScramble(req.size, req.seed) as T;
+        return generateRandomStateScramble(req.size, req.seed) as T;
     }
   }
 

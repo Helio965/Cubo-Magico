@@ -51,6 +51,8 @@ function lockMessage(lock: LockReason): string {
       return 'Aguarde o fim do embaralhamento.';
     case 'playback':
       return 'Pause a reprodução para movimentar o cubo.';
+    case 'drag':
+      return 'Conclua o giro em andamento.';
     default:
       return 'Aguarde a operação em andamento.';
   }
@@ -255,12 +257,18 @@ function handleSolved(): void {
       timeMs: null,
       isBest: false,
       ao5: null,
+      assisted: finished.assisted || (player.active && player.kind === 'solution'),
     });
   }
 }
 
 async function showCompletion(info: CompletionInfo): Promise<void> {
+  const serial = useCube.getState().moveSerial;
+  // Espera a animação terminar para celebrar junto com o último giro visível.
   await visualBus.whenIdle();
+  // Se o cubo mudou nesse intervalo (novo embaralhamento, outro movimento),
+  // a celebração ficou obsoleta.
+  if (useCube.getState().moveSerial !== serial) return;
   playCompleteSound();
   useUI.setState({ completion: info });
 }

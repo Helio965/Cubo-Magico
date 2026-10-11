@@ -4,7 +4,7 @@ import type { Scramble } from '../engine/scramble/scramble';
 import { createSolved, type CubeState } from '../engine/state/cube';
 import type { GameMode } from '../types/game';
 
-export type LockReason = null | 'scramble' | 'playback' | 'solving';
+export type LockReason = null | 'scramble' | 'playback' | 'solving' | 'drag';
 
 /**
  * Sessão do cubo: estado lógico atual, histórico (desfazer/refazer) e

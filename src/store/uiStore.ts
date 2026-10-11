@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import type { PieceKind } from '../engine/state/layout';
+import { detectTier, type Tier } from '../cube/rendering/quality';
 import type { GameMode, SolveRecord } from '../types/game';
 
 export type Section = 'play' | 'modes' | 'learn';
@@ -15,6 +16,7 @@ export interface CompletionInfo {
   ao5: number | null;
   level?: { level: number; stars: number; next: number | null };
   reference?: number | null;
+  assisted?: boolean;
 }
 
 export interface ConfirmRequest {
@@ -42,6 +44,9 @@ export interface UIStore {
   layerDepth: number;
   wide: boolean;
   webglError: string | null;
+  /** Nível de qualidade escolhido pelo modo automático. */
+  autoTier: Tier;
+  contextLost: boolean;
 }
 
 export const useUI = create<UIStore>(() => ({
@@ -52,12 +57,15 @@ export const useUI = create<UIStore>(() => ({
   highlight: null,
   cameraResetToken: 0,
   introDone: false,
-  sheetOpen: false,
+  // No celular o painel começa recolhido para priorizar o cubo.
+  sheetOpen: typeof window === 'undefined' || !window.matchMedia?.('(max-width: 899px)').matches,
   solverStatus: 'idle',
   busyMessage: null,
   layerDepth: 1,
   wide: false,
   webglError: null,
+  autoTier: detectTier(),
+  contextLost: false,
 }));
 
 export const ui = {

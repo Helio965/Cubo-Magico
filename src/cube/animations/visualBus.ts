@@ -21,6 +21,16 @@ class VisualBus {
   private idleWaiters: (() => void)[] = [];
   private busyListeners = new Set<(busy: boolean) => void>();
   private turnListeners = new Set<(move: Move) => void>();
+  private inspector: (() => CubeState) | null = null;
+
+  /** Permite consultar o estado exibido pelo renderizador (usado em testes). */
+  setInspector(fn: (() => CubeState) | null): void {
+    this.inspector = fn;
+  }
+
+  displayedState(): CubeState | null {
+    return this.inspector ? this.inspector() : null;
+  }
 
   /** O renderizador se registra aqui. Retorna a função de cancelamento. */
   attach(listener: Listener): () => void {

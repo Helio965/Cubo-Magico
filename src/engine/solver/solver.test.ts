@@ -18,7 +18,6 @@ describe('resolvedor 3×3 (Kociemba duas fases)', () => {
   it('gera as tabelas', () => {
     const t0 = performance.now();
     prepareSolver(3);
-    // eslint-disable-next-line no-console
     console.info(`Tabelas 3×3 geradas em ${(performance.now() - t0).toFixed(0)} ms`);
   });
 
@@ -32,7 +31,6 @@ describe('resolvedor 3×3 (Kociemba duas fases)', () => {
       expect(result.length).toBeLessThanOrEqual(24);
       total += result.length;
     }
-    // eslint-disable-next-line no-console
     console.info(`Média de movimentos (3×3): ${(total / 60).toFixed(1)}`);
   });
 
@@ -81,7 +79,6 @@ describe('resolvedor 2×2 (ótimo)', () => {
   it('gera a tabela completa', () => {
     const t0 = performance.now();
     prepareSolver(2);
-    // eslint-disable-next-line no-console
     console.info(`Tabela 2×2 gerada em ${(performance.now() - t0).toFixed(0)} ms`);
   });
 

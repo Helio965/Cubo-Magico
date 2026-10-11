@@ -15,9 +15,13 @@ export default defineConfig({
     chunkSizeWarningLimit: 1500,
     rollupOptions: {
       output: {
-        manualChunks: {
-          three: ['three'],
-          r3f: ['@react-three/fiber', '@react-three/drei'],
+        // Separa apenas os módulos da renderização 3D (carregados sob demanda).
+        manualChunks(id) {
+          if (id.includes('vite/preload-helper') || id.includes('commonjsHelpers')) return 'vendor';
+          if (/\/node_modules\/(react|react-dom|scheduler|zustand|use-sync-external-store)\//.test(id)) return 'vendor';
+          if (id.includes('/node_modules/three/')) return 'three';
+          if (id.includes('/node_modules/@react-three/') || id.includes('/node_modules/three-stdlib/')) return 'r3f';
+          return undefined;
         },
       },
     },
