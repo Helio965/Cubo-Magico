@@ -68,3 +68,18 @@ describe('biblioteca de algoritmos', () => {
     for (const a of ALGORITHMS.filter((x) => x.group === '2×2')) expect(bottomSolved(2, a.alg, 1)).toBe(true);
   });
 });
+
+describe('demonstrações das lições', () => {
+  it('todas as demonstrações são válidas para seu tamanho e partem de um estado coerente', async () => {
+    const { LESSONS } = await import('./lessons');
+    const { demoSetup } = await import('./demo');
+    for (const lesson of LESSONS) {
+      for (const demo of lesson.demos ?? []) {
+        const start = applyMoves(createSolved(demo.size), demoSetup(demo));
+        const end = applyMoves(start, demo.alg);
+        if (demo.setup === undefined) expect(isSolved(end)).toBe(true);
+        else expect(end.n).toBe(demo.size);
+      }
+    }
+  });
+});
