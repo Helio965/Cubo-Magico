@@ -1,0 +1,641 @@
+/* ------------------------------------------------------------------ */
+/* Estrutura principal                                                 */
+/* ------------------------------------------------------------------ */
+
+.app {
+  position: relative;
+  display: grid;
+  grid-template-columns: var(--side-w) minmax(0, 1fr);
+  grid-template-rows: var(--header-h) minmax(0, 1fr) auto;
+  grid-template-areas:
+    'header header'
+    'side stage'
+    'side dock';
+  height: 100vh;
+  height: 100dvh;
+  isolation: isolate;
+}
+
+.app::before {
+  /* Atmosfera: brilho sutil atrás de todo o aplicativo */
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(1200px 600px at 70% -10%, var(--stage-b), transparent 60%),
+    radial-gradient(900px 500px at 10% 110%, var(--stage-a), transparent 60%),
+    var(--bg);
+}
+
+/* ------------------------------------------------------------------ */
+/* Cabeçalho                                                           */
+/* ------------------------------------------------------------------ */
+
+.header {
+  grid-area: header;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 0 var(--gutter) 0 calc(var(--gutter) + 4px);
+  border-bottom: 1px solid var(--line);
+  background: color-mix(in srgb, var(--bg) 70%, transparent);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  z-index: 20;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  min-width: 0;
+  text-decoration: none;
+  color: inherit;
+}
+
+.brand-mark {
+  width: 32px;
+  height: 32px;
+  flex: none;
+  filter: drop-shadow(0 4px 14px var(--accent-glow));
+}
+
+.brand-name {
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+}
+
+.brand-name em {
+  font-style: normal;
+  background: var(--accent-grad);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.brand-tag {
+  display: block;
+  margin-top: 1px;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: 18px;
+  padding: 4px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface);
+}
+
+.nav-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  height: 32px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--text-2);
+  font-size: 13.5px;
+  font-weight: 550;
+  transition:
+    background var(--dur-fast),
+    color var(--dur-fast);
+}
+
+.nav-item:hover {
+  color: var(--text);
+  background: var(--surface-hover);
+}
+
+.nav-item[aria-current='page'] {
+  color: var(--text);
+  background: var(--surface-2);
+  box-shadow:
+    inset 0 0 0 1px var(--line-strong),
+    var(--shadow-sm);
+}
+
+.nav-item svg {
+  width: 15px;
+  height: 15px;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: auto;
+}
+
+/* ------------------------------------------------------------------ */
+/* Painel lateral                                                      */
+/* ------------------------------------------------------------------ */
+
+.side {
+  grid-area: side;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  border-right: 1px solid var(--line);
+  background: color-mix(in srgb, var(--bg-elev) 55%, transparent);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  z-index: 5;
+}
+
+.side-tabs {
+  display: none;
+}
+
+.side {
+  position: relative;
+}
+
+.side-resizer {
+  position: absolute;
+  top: 0;
+  right: -4px;
+  bottom: 0;
+  width: 8px;
+  cursor: col-resize;
+  z-index: 8;
+  touch-action: none;
+}
+
+.side-resizer::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 3px;
+  width: 2px;
+  background: transparent;
+  transition: background var(--dur-fast);
+}
+
+.side-resizer:hover::after,
+.side-resizer:focus-visible::after {
+  background: var(--accent);
+}
+
+.side-handle {
+  display: none;
+}
+
+.side-body {
+  flex: 1;
+  min-height: 0;
+  padding: 16px var(--gutter) 28px;
+}
+
+.side-body > * + * {
+  margin-top: 14px;
+}
+
+/* ------------------------------------------------------------------ */
+/* Palco do cubo                                                        */
+/* ------------------------------------------------------------------ */
+
+.stage {
+  grid-area: stage;
+  position: relative;
+  min-height: 0;
+  overflow: hidden;
+  touch-action: none;
+}
+
+.stage-bg {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+:root[data-bg='aurora'] .stage-bg {
+  background:
+    radial-gradient(42% 46% at 50% 46%, var(--stage-a), transparent 70%),
+    radial-gradient(30% 34% at 64% 30%, var(--stage-b), transparent 70%),
+    radial-gradient(100% 100% at 50% 50%, transparent 55%, var(--stage-vignette));
+}
+
+:root[data-bg='studio'] .stage-bg {
+  background:
+    radial-gradient(60% 55% at 50% 40%, color-mix(in srgb, var(--text) 9%, transparent), transparent 70%),
+    linear-gradient(180deg, transparent 60%, color-mix(in srgb, var(--text) 4%, transparent));
+}
+
+:root[data-bg='solid'] .stage-bg {
+  background: var(--bg-elev);
+}
+
+:root[data-bg='grid'] .stage-bg {
+  background:
+    radial-gradient(45% 45% at 50% 48%, var(--stage-a), transparent 70%),
+    linear-gradient(var(--stage-grid) 1px, transparent 1px) 0 0 / 44px 44px,
+    linear-gradient(90deg, var(--stage-grid) 1px, transparent 1px) 0 0 / 44px 44px;
+  mask-image: radial-gradient(75% 75% at 50% 50%, #000 40%, transparent 100%);
+}
+
+.stage-noise {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: var(--noise-opacity);
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.viewport-canvas {
+  position: absolute;
+  inset: 0;
+}
+
+.viewport-canvas canvas {
+  touch-action: none;
+  outline: none;
+}
+
+/* Marcas de visor nos cantos do palco */
+.reticle {
+  position: absolute;
+  inset: 18px;
+  pointer-events: none;
+}
+
+.reticle i {
+  position: absolute;
+  width: 22px;
+  height: 22px;
+  border-color: var(--line-strong);
+  border-style: solid;
+  border-width: 0;
+}
+
+.reticle i:nth-child(1) {
+  left: 0;
+  top: 0;
+  border-left-width: 1px;
+  border-top-width: 1px;
+}
+
+.reticle i:nth-child(2) {
+  right: 0;
+  top: 0;
+  border-right-width: 1px;
+  border-top-width: 1px;
+}
+
+.reticle i:nth-child(3) {
+  left: 0;
+  bottom: 0;
+  border-left-width: 1px;
+  border-bottom-width: 1px;
+}
+
+.reticle i:nth-child(4) {
+  right: 0;
+  bottom: 0;
+  border-right-width: 1px;
+  border-bottom-width: 1px;
+}
+
+.hud-top {
+  position: absolute;
+  inset: 16px 16px auto 16px;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: start;
+  gap: 12px;
+  pointer-events: none;
+  z-index: 3;
+}
+
+.hud-top > * {
+  pointer-events: auto;
+}
+
+.hud-left {
+  justify-self: start;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: flex-start;
+}
+
+.hud-right {
+  justify-self: end;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+.hud-bottom {
+  position: absolute;
+  left: 16px;
+  right: 16px;
+  bottom: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  pointer-events: none;
+  z-index: 3;
+}
+
+.hud-bottom > * {
+  pointer-events: auto;
+}
+
+.hud-net {
+  position: absolute;
+  left: 22px;
+  bottom: 22px;
+  z-index: 2;
+}
+
+/* ------------------------------------------------------------------ */
+/* Doca inferior                                                        */
+/* ------------------------------------------------------------------ */
+
+.dock {
+  grid-area: dock;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 10px var(--gutter);
+  border-top: 1px solid var(--line);
+  background: color-mix(in srgb, var(--bg-elev) 70%, transparent);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  z-index: 6;
+  min-width: 0;
+}
+
+.metrics {
+  display: flex;
+  align-items: stretch;
+  min-width: 0;
+  flex: 1 1 auto;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.metrics::-webkit-scrollbar {
+  display: none;
+}
+
+.metric {
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 3px;
+  padding: 2px 16px;
+  min-width: 82px;
+  border-left: 1px solid var(--line);
+  white-space: nowrap;
+}
+
+.metric:first-child {
+  border-left: 0;
+  padding-left: 2px;
+}
+
+.metric-value {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  color: var(--text);
+}
+
+.metric-value small {
+  font-size: 0.78em;
+  color: var(--text-3);
+}
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex: none;
+  padding: 4px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--surface);
+}
+
+.toolbar-sep {
+  width: 1px;
+  height: 22px;
+  margin: 0 4px;
+  background: var(--line-strong);
+}
+
+/* ------------------------------------------------------------------ */
+/* Responsividade                                                       */
+/* ------------------------------------------------------------------ */
+
+@media (max-width: 1520px) {
+  .dock {
+    flex-wrap: wrap;
+    row-gap: 8px;
+  }
+
+  .metrics {
+    flex-basis: 100%;
+    order: 2;
+  }
+
+  .toolbar {
+    margin: 0 auto;
+    order: 1;
+  }
+}
+
+@media (max-width: 1100px) {
+  .nav-item span {
+    display: none;
+  }
+
+  .nav-item {
+    padding: 0 11px;
+  }
+}
+
+@media (max-width: 899px) {
+  body {
+    font-size: 14.5px;
+  }
+
+  .app {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: var(--header-h) minmax(220px, 1fr) auto auto;
+    grid-template-areas:
+      'header'
+      'stage'
+      'dock'
+      'side';
+  }
+
+  .nav {
+    display: none;
+  }
+
+  .brand-tag {
+    display: none;
+  }
+
+  .header {
+    gap: 10px;
+  }
+
+  .header-actions .hide-mobile {
+    display: none;
+  }
+
+  .side {
+    border-right: 0;
+    border-top: 1px solid var(--line);
+    max-height: 52dvh;
+    transition: max-height var(--dur-slow) var(--ease-out);
+  }
+
+  .side[data-open='false'] {
+    max-height: 52px;
+  }
+
+  .side[data-open='false'] .side-body {
+    display: none;
+  }
+
+  .side-tabs {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 6px var(--gutter);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .side-tabs .nav-item {
+    flex: 1;
+    justify-content: center;
+    height: 38px;
+  }
+
+  .side-tabs .nav-item span {
+    display: inline;
+  }
+
+  .side-handle {
+    display: inline-flex;
+  }
+
+  .side-resizer {
+    display: none;
+  }
+
+  .side-body {
+    padding: 12px var(--gutter) 22px;
+  }
+
+  .dock {
+    padding: 8px var(--gutter);
+    gap: 8px;
+  }
+
+  .toolbar {
+    width: 100%;
+    overflow-x: auto;
+    justify-content: flex-start;
+    scrollbar-width: none;
+  }
+
+  .toolbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .metric {
+    min-width: 72px;
+    padding: 2px 12px;
+  }
+
+  .hud-top {
+    inset: 10px 10px auto 10px;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 6px;
+  }
+
+  .hud-left .chip:not(:first-child),
+  .hud-left .chip .chip-extra,
+  .hud-right .view-extra {
+    display: none;
+  }
+
+  .hud-right .toolbar {
+    flex-direction: column;
+    padding: 3px;
+  }
+
+  .hud-right .toolbar-sep {
+    display: none;
+  }
+
+  .hud-right .icon-btn {
+    width: 34px;
+    height: 34px;
+  }
+
+  .reticle {
+    inset: 10px;
+  }
+
+  .hud-bottom {
+    left: 10px;
+    right: 10px;
+    bottom: 10px;
+  }
+
+  .hud-net {
+    left: 12px;
+    bottom: 12px;
+  }
+}
+
+@media (max-width: 899px) and (max-height: 560px) and (orientation: landscape) {
+  /* Celular deitado: painel ao lado do cubo */
+  .app {
+    grid-template-columns: minmax(0, 1fr) 320px;
+    grid-template-rows: var(--header-h) minmax(0, 1fr) auto;
+    grid-template-areas:
+      'header header'
+      'stage side'
+      'dock side';
+  }
+
+  .side {
+    max-height: none;
+    border-top: 0;
+    border-left: 1px solid var(--line);
+  }
+
+  .side[data-open='false'] {
+    max-height: none;
+  }
+
+  .side[data-open='false'] .side-body {
+    display: block;
+  }
+
+  .side-handle {
+    display: none;
+  }
+}

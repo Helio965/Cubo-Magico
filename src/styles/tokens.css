@@ -1,0 +1,126 @@
+/*
+ * CubeForge 3D — tokens de design.
+ * Direção: "instrumento de precisão". Grafite profundo, linhas finas,
+ * leituras monoespaçadas e destaques azul-violeta.
+ */
+:root {
+  --font-display: 'Unbounded Variable', 'Segoe UI', sans-serif;
+  --font-body: 'Instrument Sans Variable', 'Segoe UI', system-ui, sans-serif;
+  --font-mono: 'Martian Mono Variable', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+
+  --radius-xs: 6px;
+  --radius-sm: 9px;
+  --radius: 14px;
+  --radius-lg: 20px;
+  --radius-xl: 28px;
+
+  --header-h: 60px;
+  --side-w: 372px;
+  --gutter: 16px;
+
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --dur-fast: 140ms;
+  --dur: 240ms;
+  --dur-slow: 420ms;
+
+  /* Tema escuro (padrão) */
+  --bg: #08090c;
+  --bg-elev: #0e1016;
+  --surface: rgba(20, 22, 30, 0.72);
+  --surface-2: rgba(28, 31, 42, 0.78);
+  --surface-solid: #12141b;
+  --surface-hover: rgba(255, 255, 255, 0.045);
+  --surface-press: rgba(255, 255, 255, 0.07);
+  --line: rgba(255, 255, 255, 0.07);
+  --line-strong: rgba(255, 255, 255, 0.13);
+  --text: #eceef5;
+  --text-2: #a9aec0;
+  --text-3: #7a8094;
+  --text-inverse: #0b0c10;
+
+  --accent: #5d8bff;
+  --accent-strong: #7aa0ff;
+  --accent-2: #9b6bff;
+  --accent-soft: rgba(93, 139, 255, 0.14);
+  --accent-glow: rgba(110, 120, 255, 0.45);
+  --accent-grad: linear-gradient(135deg, #4d7dff 0%, #7b6cff 55%, #a35cff 100%);
+
+  --success: #3ee0a1;
+  --success-soft: rgba(62, 224, 161, 0.13);
+  --warning: #ffbd4a;
+  --warning-soft: rgba(255, 189, 74, 0.14);
+  --danger: #ff5f73;
+  --danger-soft: rgba(255, 95, 115, 0.14);
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow: 0 10px 30px -12px rgba(0, 0, 0, 0.7), 0 2px 6px rgba(0, 0, 0, 0.35);
+  --shadow-lg: 0 30px 80px -20px rgba(0, 0, 0, 0.85), 0 8px 24px rgba(0, 0, 0, 0.4);
+  --glass-blur: blur(18px) saturate(140%);
+  --focus-ring: 0 0 0 2px var(--bg), 0 0 0 4px var(--accent);
+
+  --stage-a: rgba(76, 102, 255, 0.24);
+  --stage-b: rgba(155, 92, 255, 0.18);
+  --stage-grid: rgba(255, 255, 255, 0.035);
+  --stage-vignette: rgba(0, 0, 0, 0.55);
+  --noise-opacity: 0.05;
+  /* Séries de gráficos (paleta categórica validada para daltonismo) */
+  --series-1: #3987e5;
+  --series-2: #d95926;
+  color-scheme: dark;
+}
+
+:root[data-theme='light'] {
+  --bg: #e9ecf3;
+  --bg-elev: #f4f5f9;
+  --surface: rgba(255, 255, 255, 0.74);
+  --surface-2: rgba(255, 255, 255, 0.86);
+  --surface-solid: #ffffff;
+  --surface-hover: rgba(18, 20, 40, 0.045);
+  --surface-press: rgba(18, 20, 40, 0.08);
+  --line: rgba(18, 22, 40, 0.08);
+  --line-strong: rgba(18, 22, 40, 0.16);
+  --text: #11131b;
+  --text-2: #4a5065;
+  --text-3: #6b7187;
+  --text-inverse: #ffffff;
+
+  --accent: #3f6bff;
+  --accent-strong: #2f58e6;
+  --accent-2: #7c4dff;
+  --accent-soft: rgba(63, 107, 255, 0.12);
+  --accent-glow: rgba(90, 100, 255, 0.3);
+
+  --success: #0d9f6b;
+  --success-soft: rgba(13, 159, 107, 0.12);
+  --warning: #b9740a;
+  --warning-soft: rgba(185, 116, 10, 0.12);
+  --danger: #d6334a;
+  --danger-soft: rgba(214, 51, 74, 0.1);
+
+  --shadow-sm: 0 1px 2px rgba(20, 24, 50, 0.08);
+  --shadow: 0 12px 30px -14px rgba(20, 24, 60, 0.25), 0 2px 6px rgba(20, 24, 60, 0.06);
+  --shadow-lg: 0 30px 70px -24px rgba(20, 24, 60, 0.35), 0 6px 18px rgba(20, 24, 60, 0.08);
+
+  --stage-a: rgba(76, 110, 255, 0.16);
+  --stage-b: rgba(150, 92, 255, 0.12);
+  --stage-grid: rgba(20, 24, 60, 0.05);
+  --stage-vignette: rgba(120, 128, 160, 0.18);
+  --noise-opacity: 0.035;
+  --series-1: #2a78d6;
+  --series-2: #eb6834;
+  color-scheme: light;
+}
+
+@media (max-width: 1180px) {
+  :root {
+    --side-w: 330px;
+  }
+}
+
+@media (max-width: 899px) {
+  :root {
+    --header-h: 54px;
+    --gutter: 12px;
+  }
+}
