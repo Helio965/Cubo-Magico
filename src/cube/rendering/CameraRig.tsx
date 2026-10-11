@@ -6,6 +6,7 @@ import { prefersReducedMotion, useSettings, type CameraPreset } from '../../feat
 import { useCube } from '../../store/cubeStore';
 import { useUI } from '../../store/uiStore';
 import { fitDistance } from './framing';
+import { registerProbe } from '../../utils/probes';
 import { usePlayer } from '../../features/player/playerStore';
 
 const PRESETS: Record<CameraPreset, Vector3> = {
@@ -17,7 +18,7 @@ const PRESETS: Record<CameraPreset, Vector3> = {
 
 export function CameraRig({ spacing }: { spacing: number }) {
   const n = useCube((s) => s.size);
-  const { camera, size, invalidate } = useThree();
+  const { camera, size, invalidate, gl } = useThree();
   const controls = useRef<ComponentRef<typeof OrbitControls>>(null);
   const preset = useSettings((s) => s.cameraPreset);
   const sensitivity = useSettings((s) => s.cameraSensitivity);
@@ -30,6 +31,17 @@ export function CameraRig({ spacing }: { spacing: number }) {
   const distance = fitDistance(n, spacing, fov, aspect);
   const cubeRadius = ((n * spacing) / 2) * Math.sqrt(3);
   const minDistance = Math.max(distance * 0.55, cubeRadius + 0.9);
+
+  useEffect(() => registerProbe('camera', () => camera.position.toArray().map((v) => Math.round(v * 1000) / 1000)), [camera]);
+  useEffect(
+    () =>
+      registerProbe('projector', () => (p: [number, number, number]) => {
+        const v = new Vector3(...p).project(camera);
+        const rect = gl.domElement.getBoundingClientRect();
+        return [rect.left + ((v.x + 1) / 2) * rect.width, rect.top + ((1 - v.y) / 2) * rect.height];
+      }),
+    [camera, gl],
+  );
 
   // Enquadramento inicial e redefinição animada da câmera.
   const first = useRef(true);

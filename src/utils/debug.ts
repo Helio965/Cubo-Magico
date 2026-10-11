@@ -6,6 +6,7 @@ import { useCube } from '../store/cubeStore';
 import * as controller from '../store/controller';
 import { useStats } from '../features/statistics/statsStore';
 import { usePlayer } from '../features/player/playerStore';
+import { readProbe } from './probes';
 
 /**
  * Gancho de inspeção somente leitura para testes automatizados de ponta a
@@ -38,6 +39,10 @@ export function installDebugHook(): void {
       return { active: p.active, index: p.index, length: p.moves.length, status: p.status, kind: p.kind };
     },
     records: () => useStats.getState().records.length,
+    camera: () => readProbe('camera'),
+    /** Converte um ponto 3D (coordenadas do cubo) em coordenadas de tela. */
+    project: (p: [number, number, number]) =>
+      (readProbe('projector') as ((v: [number, number, number]) => [number, number]) | undefined)?.(p) ?? null,
     whenIdle: () => visualBus.whenIdle(),
     /** O estado exibido pelo renderizador coincide com o estado lógico? */
     displayMatchesLogical: () => {
