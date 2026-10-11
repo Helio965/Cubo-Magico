@@ -81,6 +81,8 @@ export interface Settings {
   inspection: boolean;
   timerStart: TimerStart;
   doubleTapStart: boolean;
+  /** Casas decimais do cronômetro ao vivo: centésimos (2) ou milésimos (3). */
+  timerDigits: 2 | 3;
   scrambleKind: ScrambleKind;
   scrambleAnimated: boolean;
   scrambleLengths: Record<string, number>;
@@ -118,6 +120,7 @@ export const DEFAULT_SETTINGS: Settings = {
   inspection: true,
   timerStart: 'firstMove',
   doubleTapStart: true,
+  timerDigits: 3,
   scrambleKind: 'random-move',
   scrambleAnimated: true,
   scrambleLengths: {},

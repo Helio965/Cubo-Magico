@@ -631,7 +631,7 @@ select.input {
 
 .size-grid {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 6px;
 }
 
@@ -666,7 +666,7 @@ select.input {
 
 .size-glyph {
   display: grid;
-  gap: 2px;
+  gap: 1.5px;
   width: 30px;
   height: 30px;
   transform: rotate(45deg) scale(0.82);

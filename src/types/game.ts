@@ -84,5 +84,5 @@ export const MODES: readonly ModeInfo[] = [
 
 export const modeInfo = (id: GameMode): ModeInfo => MODES.find((m) => m.id === id)!;
 
-export const SUPPORTED_SIZES = [2, 3, 4, 5] as const;
+export const SUPPORTED_SIZES = [2, 3, 4, 5, 6, 7] as const;
 export type CubeSize = (typeof SUPPORTED_SIZES)[number];

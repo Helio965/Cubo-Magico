@@ -92,3 +92,17 @@ describe('inspeção WCA', () => {
     expect(combinePenalties('+2', 'DNF')).toBe('DNF');
   });
 });
+
+describe('escala do gráfico', async () => {
+  const { niceStep, tickLabel } = await import('./chartScale');
+  it('gera passos redondos', () => {
+    expect(niceStep(2000, 4)).toBe(500);
+    expect(niceStep(40_000, 4)).toBe(10_000);
+  });
+  it('formata rótulos sem duplicar valores', () => {
+    const labels = [0, 500, 1000, 1500, 2000].map((t) => tickLabel(t, 500));
+    expect(new Set(labels).size).toBe(labels.length);
+    expect(tickLabel(90_000, 10_000)).toBe('1:30');
+    expect(tickLabel(12_000, 2000)).toBe('12s');
+  });
+});

@@ -257,6 +257,17 @@ export function SettingsDrawer() {
             ]}
           />
         </Field>
+        <Field label="Precisão exibida">
+          <Segmented
+            label="Precisão do cronômetro"
+            value={s.timerDigits}
+            onChange={(v) => s.set('timerDigits', v)}
+            options={[
+              { value: 3, label: 'Milésimos (0.000)' },
+              { value: 2, label: 'Centésimos (0.00)' },
+            ]}
+          />
+        </Field>
         <FieldRow label="Toque duplo no cubo inicia">
           <Switch label="Toque duplo" checked={s.doubleTapStart} onChange={(v) => s.set('doubleTapStart', v)} />
         </FieldRow>

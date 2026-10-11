@@ -4,6 +4,7 @@ import { useAttempt, elapsedOf, type AttemptPhase } from './attemptStore';
 import { INSPECTION_MS, inspectionWarning } from './inspection';
 import { playTickSound } from '../audio/audio';
 import { modeInfo } from '../../types/game';
+import { useSettings } from '../settings/settingsStore';
 
 const PHASE_LABEL: Record<AttemptPhase, string> = {
   idle: 'Aguardando',
@@ -14,13 +15,13 @@ const PHASE_LABEL: Record<AttemptPhase, string> = {
   finished: 'Concluído',
 };
 
-function splitTime(ms: number): { main: string; frac: string } {
+function splitTime(ms: number, digits: 2 | 3): { main: string; frac: string } {
   const total = Math.max(0, ms);
-  const cs = Math.floor(total / 10) % 100;
+  const frac = digits === 3 ? Math.floor(total) % 1000 : Math.floor(total / 10) % 100;
   const s = Math.floor(total / 1000);
   const m = Math.floor(s / 60);
   const main = m > 0 ? `${m}:${String(s % 60).padStart(2, '0')}` : String(s);
-  return { main, frac: `.${String(cs).padStart(2, '0')}` };
+  return { main, frac: `.${String(frac).padStart(digits, '0')}` };
 }
 
 /** Cronômetro principal. Atualiza por requestAnimationFrame apenas enquanto corre. */
@@ -28,6 +29,7 @@ export function TimerDisplay({ compact }: { compact?: boolean }) {
   const phase = useAttempt((s) => s.phase);
   const penalty = useAttempt((s) => s.penalty);
   const mode = useCube((s) => s.mode);
+  const digits = useSettings((s) => s.timerDigits);
   const [now, setNow] = useState(() => performance.now());
   const lastWarn = useRef<string>('none');
 
@@ -51,7 +53,7 @@ export function TimerDisplay({ compact }: { compact?: boolean }) {
     const remaining = Math.ceil((INSPECTION_MS - el) / 1000);
     text = el > INSPECTION_MS ? { main: el > 17_000 ? 'DNF' : '+2', frac: '' } : { main: String(remaining), frac: '' };
   } else {
-    text = splitTime(elapsedOf(s, now));
+    text = splitTime(elapsedOf(s, now), digits);
   }
 
   useEffect(() => {

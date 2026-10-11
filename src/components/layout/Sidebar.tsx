@@ -8,6 +8,7 @@ import { ScramblePanel } from '../controls/ScramblePanel';
 import { SizeSelector } from '../controls/SizeSelector';
 import { Panel } from '../ui/controls';
 import { SECTIONS } from './sections';
+import { SideResizer } from './SideResizer';
 
 function PlaySection() {
   return (
@@ -68,6 +69,7 @@ export function Sidebar() {
         {section === 'modes' && <ModesPanel />}
         {section === 'learn' && <LearnPanel />}
       </div>
+      <SideResizer />
     </aside>
   );
 }

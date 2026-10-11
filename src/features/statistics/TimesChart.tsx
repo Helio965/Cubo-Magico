@@ -2,6 +2,7 @@ import { useLayoutEffect, useMemo, useRef, useState } from 'react';
 import type { SolveRecord } from '../../types/game';
 import { formatTime } from '../../utils/format';
 import { averageOf, effectiveTime } from './stats';
+import { niceStep, tickLabel } from './chartScale';
 
 interface Point {
   i: number;
@@ -11,14 +12,9 @@ interface Point {
 }
 
 const H = 230;
+
 const PAD = { top: 18, right: 18, bottom: 26, left: 52 };
 
-function niceStep(range: number, ticks: number): number {
-  const raw = range / ticks;
-  const pow = Math.pow(10, Math.floor(Math.log10(raw)));
-  const n = raw / pow;
-  return (n < 1.5 ? 1 : n < 3 ? 2 : n < 7 ? 5 : 10) * pow;
-}
 
 /**
  * Evolução dos tempos: cada tentativa como ponto (série 1) e a média Ao5
@@ -110,7 +106,7 @@ export function TimesChart({ records }: { records: SolveRecord[] }) {
             <g key={t}>
               <line className="grid" x1={PAD.left} x2={width - PAD.right} y1={y(t)} y2={y(t)} />
               <text x={PAD.left - 8} y={y(t) + 3} textAnchor="end">
-                {formatTime(t).replace(/\.\d+$/, '')}s
+                {tickLabel(t, step)}
               </text>
             </g>
           ))}
